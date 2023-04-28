@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const plane = PIXI.Sprite.from("./assets/plane.png");
   plane.anchor.set(0.5, 0.5);
+  plane.scale.set(0.5); // Adiciona a escala ao sprite
   plane.position.set(
     app.screen.width / 2,
     app.screen.height - plane.height / 2
