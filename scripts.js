@@ -1,25 +1,14 @@
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("DOMContentLoaded");
   const app = new PIXI.Application({
     width: window.innerWidth,
     height: window.innerHeight,
     backgroundColor: 0x1099bb,
   });
+
   document.body.appendChild(app.view);
 
   const plane = PIXI.Sprite.from("./assets/plane.png");
-  console.log(plane);
-  plane.position.set(0, 0);
+  plane.anchor.set(0.5, 1); // define o ponto central inferior como ponto de ancoragem
+  plane.position.set(app.screen.width / 2, app.screen.height - plane.height / 2); // define as coordenadas do sprite
   app.stage.addChild(plane);
-
-  window.addEventListener("keydown", (event) => {
-    if (event.code === "Space") {
-      plane.vy = -5;
-    }
-  });
-
-  app.ticker.add(() => {
-    plane.y += plane.vy;
-    plane.vy += 0.1;
-  });
 });
