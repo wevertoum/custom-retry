@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
+const startGame = () => {
   const heightScreen = window.innerHeight;
   const widthScreen = window.innerWidth;
 
@@ -32,8 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  app.ticker.add(() => {
-    // Limita o movimento do avião para a altura da tela
+  const movePlane = () => {
     if (plane.y < plane.height / 2) {
       plane.y = plane.height / 2;
       plane.vy = 0;
@@ -44,5 +43,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     plane.y += plane.vy;
     plane.vy += 0.1;
+  };
+
+  app.ticker.add(() => {
+    movePlane();
   });
+};
+
+document.addEventListener("DOMContentLoaded", () => {
+  startGame();
 });
