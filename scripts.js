@@ -17,9 +17,10 @@ const startGame = () => {
   document.body.appendChild(app.view);
 
   const plane = PIXI.Sprite.from("./assets/plane.png");
-  plane.anchor.set(0.5, 0.5);
   plane.scale.set(0.5);
-  plane.position.set(app.screen.width / 2, app.screen.height - 50);
+  console.log(plane.width, plane.height);
+  plane.pivot.set(200, -200);
+  plane.position.set(app.screen.width / 2, app.screen.height / 2);
   app.stage.addChild(plane);
 
   window.addEventListener("keydown", (event) => {
@@ -39,11 +40,12 @@ const startGame = () => {
   const movePlane = () => {
     if (spaceKeyDownTime > 0) {
       const elapsedTime = performance.now() - spaceKeyDownTime;
-      const rotationRatio = Math.min(elapsedTime / MAX_TIME, 1); // limite em 1 para evitar valores maiores que 1
-      const rotationDegrees = rotationRatio * 360; // graus de inclinação do avião
+      const rotationRatio = Math.min(elapsedTime / MAX_TIME, 1);
+      const invertedRotationRatio = 1 - rotationRatio; // inverte a direção de giro
+      const rotationDegrees = invertedRotationRatio * 360; // graus de inclinação do avião
       const rotationRadians = (rotationDegrees * Math.PI) / 180; // conversão para radianos
-      planeRotation = planeRotationStart + rotationRadians; // atualização da rotação do avião
-      planeRotation %= MAX_ROTATION; // limita a rotação em uma volta completa
+      planeRotation = planeRotationStart + rotationRadians;
+      planeRotation %= MAX_ROTATION;
     }
     plane.rotation = planeRotation;
   };
