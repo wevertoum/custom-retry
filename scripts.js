@@ -1,5 +1,6 @@
 let planeRotation = 0;
 let spaceKeyDownTime = 0;
+let backgroundSpeed = 2;
 const MAX_ROTATION = 2 * Math.PI; // representação em radianos de uma volta completa (360 graus)
 const MIN_ROTATION = 0; // representação em radianos de 0 grau de inclinação
 const MAX_TIME = 2000; // tempo máximo em milissegundos para completar uma volta completa (360 graus)
@@ -11,17 +12,27 @@ const startGame = () => {
   const app = new PIXI.Application({
     width: widthScreen,
     height: heightScreen,
-    backgroundColor: 0x1099bb,
   });
 
   document.body.appendChild(app.view);
 
+  const background = PIXI.Sprite.from("./assets/sky-background.avif");
+  background.anchor.set(0.5);
+  background.position.set(widthScreen / 2, heightScreen / 2);
+  app.stage.addChild(background);
+
   const plane = PIXI.Sprite.from("./assets/plane.png");
   plane.scale.set(0.5);
-  console.log(plane.width, plane.height);
   plane.pivot.set(200, -200);
-  plane.position.set(app.screen.width / 2, app.screen.height / 2);
+  plane.position.set(widthScreen / 2, heightScreen / 2);
   app.stage.addChild(plane);
+
+  const camera = new PIXI.Container();
+  camera.addChild(background);
+  camera.addChild(plane);
+  camera.pivot.set(widthScreen / 2, heightScreen / 2);
+  camera.position.set(widthScreen / 2, heightScreen / 2);
+  app.stage.addChild(camera);
 
   window.addEventListener("keydown", (event) => {
     if (event.code === "Space") {
@@ -46,6 +57,11 @@ const startGame = () => {
       const rotationRadians = (rotationDegrees * Math.PI) / 180; // conversão para radianos
       planeRotation = planeRotationStart + rotationRadians;
       planeRotation %= MAX_ROTATION;
+
+      // atualiza a posição do background com base na velocidade do avião
+      const angle = planeRotation + Math.PI / 2; // ajuste para que a direção 0 grau seja para cima
+      background.position.x -= Math.sin(angle) * backgroundSpeed;
+      background.position.y += Math.cos(angle) * backgroundSpeed;
     }
     plane.rotation = planeRotation;
   };
